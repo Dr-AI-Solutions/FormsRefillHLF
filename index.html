@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalador de Marcadores - Asistencia</title>
+    <style>
+        :root {
+            --primary-color: #0078d4;
+            --success-color: #107c41;
+            --danger-color: #d13438;
+            --bg-color: #f3f2f1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px 15px;
+            background-color: #faf9f8;
+            color: #323130;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h2 { margin-top: 0; color: var(--primary-color); }
+        
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 4px;
+            border: 1px solid #8a8886;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-entrada { background-color: var(--success-color); color: white; }
+        .btn-salida { background-color: var(--danger-color); color: white; }
+        
+        .toast {
+            display: none;
+            padding: 10px;
+            background: #323130;
+            color: white;
+            text-align: center;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .instructions {
+            background: #eff6fc;
+            border-left: 4px solid var(--primary-color);
+            padding: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .instructions ol { margin: 5px 0 0 0; padding-left: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Generador de Marcadores</h2>
+        <p style="font-size: 14px; color: #605e5c;">Configura tus datos una sola vez para generar los marcadores de Entrada y Salida.</p>
+        
+        <label>Nombre Completo:</label>
+        <input type="text" id="nombre" value="Pablo Sepúlveda Guerrerro">
+
+        <label>RUT (sin puntos con guión):</label>
+        <input type="text" id="rut" value="17154714-8">
+
+        <label>Tutor Clínico:</label>
+        <input type="text" id="tutor" value="Dr. Emanuel Llaguno">
+
+        <label>Unidad de Práctica:</label>
+        <input type="text" id="unidad" value="Ginecología">
+
+        <div class="btn-group">
+            <button class="btn-entrada" onclick="copiarBookmarklet('Entrada')">Copiar Entrada</button>
+            <button class="btn-salida" onclick="copiarBookmarklet('Salida')">Copiar Salida</button>
+        </div>
+
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <div class="card instructions">
+        <strong>¿Cómo guardarlo en tu teléfono?</strong>
+        <ol>
+            <li>Haz clic en <b>Copiar Entrada</b> (o Salida).</li>
+            <li>Abre los marcadores de tu navegador y crea uno nuevo.</li>
+            <li>Ponle de nombre <b>"Auto Entrada"</b>.</li>
+            <li>En la casilla de la <b>URL</b>, pega el código que acabas de copiar y guarda.</li>
+            <li>¡Listo! Al estar en Microsoft Forms, solo busca tu marcador y se completará solo.</li>
+        </ol>
+    </div>
+
+    <script>
+        function generarCodigo(tipoRegistro) {
+            let nombre = document.getElementById('nombre').value;
+            let rut = document.getElementById('rut').value;
+            let tutor = document.getElementById('tutor').value;
+            let unidad = document.getElementById('unidad').value;
+
+            return `javascript:(function(){let e=Array.from(document.querySelectorAll('input, textarea, [contenteditable="true"]')).filter(e=>"hidden"!==e.type&&"radio"!==e.type&&"checkbox"!==e.type&&"submit"!==e.type);function t(t,n){e[t]&&(e[t].focus(),e[t].value=n,e[t].dispatchEvent(new Event("input",{bubbles:!0})),e[t].dispatchEvent(new Event("change",{bubbles:!0})),e[t].blur())}function n(e){let t=Array.from(document.querySelectorAll("span, label, div")).find(t=>0===t.children.length&&t.textContent.trim()===e);if(t){(t.closest('label, div[role="radio"], div[data-automation-id]')||t).click()}}t(0,"${nombre}"),t(1,"${rut}"),t(2,"${tutor}"),t(3,"${unidad}"),n("${tipoRegistro}"),n("Internado"),n("PUC"),setTimeout(()=>{n("Medicina"),setTimeout(()=>{let e=document.querySelector('button[data-automation-id="submitButton"]')||Array.from(document.querySelectorAll("button")).find(e=>e.textContent.trim().includes("Enviar")||e.textContent.trim().includes("Submit"));e&&e.click()},400)},500)})();`;
+        }
+
+        function copiarBookmarklet(tipo) {
+            let codigo = generarCodigo(tipo);
+            
+            navigator.clipboard.writeText(codigo).then(() => {
+                mostrarToast(`✓ Código de ${tipo} copiado al portapapeles`);
+            }).catch(err => {
+                mostrarToast("Error al copiar automáticamente. Revisa los permisos.");
+            });
+        }
+
+        function mostrarToast(mensaje) {
+            let toast = document.getElementById("toast");
+            toast.innerText = mensaje;
+            toast.style.display = "block";
+            setTimeout(() => { toast.style.display = "none"; }, 3000);
+        }
+    </script>
+</body>
+</html>
