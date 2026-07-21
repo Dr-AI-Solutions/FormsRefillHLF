@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Marcadores - Asistencia</title>
+    <style>
+        body { font-family: sans-serif; max-width: 500px; margin: 20px auto; padding: 0 15px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { margin-top: 15px; padding: 10px 15px; background-color: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+        .result-box { margin-top: 20px; padding: 10px; background: #f3f2f1; border-radius: 4px; word-break: break-all; }
+        textarea { width: 100%; height: 80px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <h2>Generador de Marcadores</h2>
+    
+    <label>Nombre Completo:</label>
+    <input type="text" id="nombre" value="Pablo Sepúlveda Guerrerro">
+
+    <label>RUT:</label>
+    <input type="text" id="rut" value="17154714-8">
+
+    <label>Tutor Clínico:</label>
+    <input type="text" id="tutor" value="Dr. Emanuel Llaguno">
+
+    <label>Unidad de Práctica:</label>
+    <input type="text" id="unidad" value="Ginecología">
+
+    <label>Centro de Formación:</label>
+    <input type="text" id="centro" value="PUC">
+
+    <label>Carrera:</label>
+    <input type="text" id="carrera" value="Medicina">
+
+    <button onclick="generarBookmarklets()">Generar Marcadores</button>
+
+    <div id="resultados" style="display:none;">
+        <h3>Marcador de Entrada</h3>
+        <p>Copia este código y pégalo en la URL de un marcador:</p>
+        <textarea id="bmEntrada" readonly></textarea>
+
+        <h3>Marcador de Salida</h3>
+        <p>Copia este código y pégalo en la URL de un marcador:</p>
+        <textarea id="bmSalida" readonly></textarea>
+    </div>
+
+    <script>
+        function construirCodigo(tipoRegistro, nombre, rut, tutor, unidad, centro, carrera) {
+            return `javascript:(function(){let e=Array.from(document.querySelectorAll('input, textarea, [contenteditable="true"]')).filter(e=>"hidden"!==e.type&&"radio"!==e.type&&"checkbox"!==e.type&&"submit"!==e.type);function t(t,n){e[t]&&(e[t].focus(),e[t].value=n,e[t].dispatchEvent(new Event("input",{bubbles:!0})),e[t].dispatchEvent(new Event("change",{bubbles:!0})),e[t].blur())}function n(e){let t=Array.from(document.querySelectorAll("span, label, div")).find(t=>0===t.children.length&&t.textContent.trim()===e);if(t){(t.closest('label, div[role="radio"], div[data-automation-id]')||t).click()}}t(0,"${nombre}"),t(1,"${rut}"),t(2,"${tutor}"),t(3,"${unidad}"),n("${tipoRegistro}"),n("Internado"),n("${centro}"),setTimeout(()=>{n("${carrera}"),setTimeout(()=>{let e=document.querySelector('button[data-automation-id="submitButton"]')||Array.from(document.querySelectorAll("button")).find(e=>e.textContent.trim().includes("Enviar")||e.textContent.trim().includes("Submit"));e&&e.click()},400)},500)})();`;
+        }
+
+        function generarBookmarklets() {
+            let nombre = document.getElementById('nombre').value;
+            let rut = document.getElementById('rut').value;
+            let tutor = document.getElementById('tutor').value;
+            let unidad = document.getElementById('unidad').value;
+            let centro = document.getElementById('centro').value;
+            let carrera = document.getElementById('carrera').value;
+
+            document.getElementById('bmEntrada').value = construirCodigo("Entrada", nombre, rut, tutor, unidad, centro, carrera);
+            document.getElementById('bmSalida').value = construirCodigo("Salida", nombre, rut, tutor, unidad, centro, carrera);
+
+            document.getElementById('resultados').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
