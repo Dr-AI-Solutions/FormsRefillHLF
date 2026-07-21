@@ -9,7 +9,7 @@
             --primary-color: #0078d4;
             --success-color: #107c41;
             --danger-color: #d13438;
-            --bg-color: #f3f2f1;
+            --bg-color: #faf9f8;
         }
 
         body {
@@ -17,7 +17,7 @@
             max-width: 500px;
             margin: 0 auto;
             padding: 20px 15px;
-            background-color: #faf9f8;
+            background-color: var(--bg-color);
             color: #323130;
         }
 
@@ -94,12 +94,12 @@
 
     <div class="card">
         <h2>Generador de Marcadores</h2>
-        <p style="font-size: 14px; color: #605e5c;">Configura tus datos una sola vez para generar los marcadores de Entrada y Salida.</p>
+        <p style="font-size: 14px; color: #605e5c;">Completa tus datos para generar los marcadores de Entrada y Salida.</p>
         
         <label>Nombre Completo:</label>
         <input type="text" id="nombre" value="Nombre">
 
-        <label>RUT (sin puntos con guión):</label>
+        <label>RUT:</label>
         <input type="text" id="rut" value="RUT">
 
         <label>Tutor Clínico:</label>
@@ -107,6 +107,12 @@
 
         <label>Unidad de Práctica:</label>
         <input type="text" id="unidad" value="Ginecología/Obstetricia">
+
+        <label>Centro de Formación:</label>
+        <input type="text" id="centro" value="PUC">
+
+        <label>Carrera:</label>
+        <input type="text" id="carrera" value="Medicina">
 
         <div class="btn-group">
             <button class="btn-entrada" onclick="copiarBookmarklet('Entrada')">Copiar Entrada</button>
@@ -121,9 +127,9 @@
         <ol>
             <li>Haz clic en <b>Copiar Entrada</b> (o Salida).</li>
             <li>Abre los marcadores de tu navegador y crea uno nuevo.</li>
-            <li>Ponle de nombre <b>"Auto Entrada"</b>.</li>
-            <li>En la casilla de la <b>URL</b>, pega el código que acabas de copiar y guarda.</li>
-            <li>¡Listo! Al estar en Microsoft Forms, solo busca tu marcador y se completará solo.</li>
+            <li>Asígnale el nombre <b>"Auto Entrada"</b>.</li>
+            <li>En la casilla de la <b>URL</b>, pega el código copiado y guarda.</li>
+            <li>Al cargar el formulario, busca tu marcador en la barra de direcciones para ejecutarlo.</li>
         </ol>
     </div>
 
@@ -133,8 +139,10 @@
             let rut = document.getElementById('rut').value;
             let tutor = document.getElementById('tutor').value;
             let unidad = document.getElementById('unidad').value;
+            let centro = document.getElementById('centro').value;
+            let carrera = document.getElementById('carrera').value;
 
-            return `javascript:(function(){let e=Array.from(document.querySelectorAll('input, textarea, [contenteditable="true"]')).filter(e=>"hidden"!==e.type&&"radio"!==e.type&&"checkbox"!==e.type&&"submit"!==e.type);function t(t,n){e[t]&&(e[t].focus(),e[t].value=n,e[t].dispatchEvent(new Event("input",{bubbles:!0})),e[t].dispatchEvent(new Event("change",{bubbles:!0})),e[t].blur())}function n(e){let t=Array.from(document.querySelectorAll("span, label, div")).find(t=>0===t.children.length&&t.textContent.trim()===e);if(t){(t.closest('label, div[role="radio"], div[data-automation-id]')||t).click()}}t(0,"${nombre}"),t(1,"${rut}"),t(2,"${tutor}"),t(3,"${unidad}"),n("${tipoRegistro}"),n("Internado"),n("PUC"),setTimeout(()=>{n("Medicina"),setTimeout(()=>{let e=document.querySelector('button[data-automation-id="submitButton"]')||Array.from(document.querySelectorAll("button")).find(e=>e.textContent.trim().includes("Enviar")||e.textContent.trim().includes("Submit"));e&&e.click()},400)},500)})();`;
+            return `javascript:(function(){let e=Array.from(document.querySelectorAll('input, textarea, [contenteditable="true"]')).filter(e=>"hidden"!==e.type&&"radio"!==e.type&&"checkbox"!==e.type&&"submit"!==e.type);function t(t,n){e[t]&&(e[t].focus(),e[t].value=n,e[t].dispatchEvent(new Event("input",{bubbles:!0})),e[t].dispatchEvent(new Event("change",{bubbles:!0})),e[t].blur())}function n(e){let t=Array.from(document.querySelectorAll("span, label, div")).find(t=>0===t.children.length&&t.textContent.trim()===e);if(t){(t.closest('label, div[role="radio"], div[data-automation-id]')||t).click()}}t(0,"${nombre}"),t(1,"${rut}"),t(2,"${tutor}"),t(3,"${unidad}"),n("${tipoRegistro}"),n("Internado"),n("${centro}"),setTimeout(()=>{n("${carrera}"),setTimeout(()=>{let e=document.querySelector('button[data-automation-id="submitButton"]')||Array.from(document.querySelectorAll("button")).find(e=>e.textContent.trim().includes("Enviar")||e.textContent.trim().includes("Submit"));e&&e.click()},400)},500)})();`;
         }
 
         function copiarBookmarklet(tipo) {
@@ -142,8 +150,8 @@
             
             navigator.clipboard.writeText(codigo).then(() => {
                 mostrarToast(`✓ Código de ${tipo} copiado al portapapeles`);
-            }).catch(err => {
-                mostrarToast("Error al copiar automáticamente. Revisa los permisos.");
+            }).catch(() => {
+                mostrarToast("Error al copiar automáticamente. Permite el acceso al portapapeles.");
             });
         }
 
