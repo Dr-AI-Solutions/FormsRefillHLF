@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instalador de Marcadores y Enlaces - Asistencia</title>
+    <title>Generador de Asistencia - Google Forms</title>
     <style>
         :root {
             --primary-color: #0078d4;
@@ -37,7 +37,8 @@
             display: block;
             margin-top: 12px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
+            color: #323130;
         }
 
         input {
@@ -50,9 +51,14 @@
             font-size: 15px;
         }
 
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
         .section-header {
             margin-top: 22px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-size: 14px;
             font-weight: bold;
             color: #323130;
@@ -79,7 +85,7 @@
             border: none;
             border-radius: 4px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: opacity 0.2s;
         }
@@ -132,7 +138,7 @@
 
     <div class="card">
         <h2>Generador de Asistencia</h2>
-        <p style="font-size: 14px; color: var(--subtext-color);">Completa tus datos para generar los enlaces automáticos o los marcadores de Entrada y Salida.</p>
+        <p style="font-size: 13px; color: var(--subtext-color);">Completa tus datos para generar tus enlaces automáticos para Rutinas o Marcadores.</p>
         
         <label>URL del Google Form:</label>
         <input type="text" id="formUrl" placeholder="https://docs.google.com/forms/d/e/.../viewform">
@@ -158,17 +164,17 @@
         <label>Tipo de Práctica:</label>
         <input type="text" id="practica" value="Internado o Laboral">
 
-        <!-- OPCIÓN 1: ENLACES URL -->
-        <div class="section-header">📍 Opción 1: Enlaces Directos (Good Lock / Routines+)</div>
-        <p class="section-desc">Abre el formulario con todos los campos pre-llenados automáticamente por URL. Ideal para geolocalización.</p>
+        <!-- OPCIÓN 1: AUTO-ENVÍO (PARA RUTINAS/GPS) -->
+        <div class="section-header">📍 Opción 1: Enlaces de Auto-Envío (Samsung Rutinas / GPS)</div>
+        <p class="section-desc">Envía el formulario automáticamente sin presionar botones. Ideal para disparar por geolocalización.</p>
         <div class="btn-group">
-            <button class="btn-entrada" onclick="copiarUrl('ENTRADA')">Copiar Link Entrada</button>
-            <button class="btn-salida" onclick="copiarUrl('SALIDA')">Copiar Link Salida</button>
+            <button class="btn-entrada" onclick="copiarAutoEnvio('ENTRADA')">Copiar Link Entrada</button>
+            <button class="btn-salida" onclick="copiarAutoEnvio('SALIDA')">Copiar Link Salida</button>
         </div>
 
         <!-- OPCIÓN 2: BOOKMARKLETS -->
-        <div class="section-header">⭐ Opción 2: Bookmarklets (Rellena y Envía)</div>
-        <p class="section-desc">Se guarda como marcador en Chrome. Al estar dentro del formulario, lo ejecutas desde la barra superior y se envía solo.</p>
+        <div class="section-header">⭐ Opción 2: Bookmarklets (Para el navegador)</div>
+        <p class="section-desc">Guárdalo en marcadores para ejecutarlo manualmente desde la barra superior de Chrome.</p>
         <div class="btn-group">
             <button class="btn-entrada" onclick="copiarBookmarklet('ENTRADA')">Copiar Script Entrada</button>
             <button class="btn-salida" onclick="copiarBookmarklet('SALIDA')">Copiar Script Salida</button>
@@ -179,30 +185,26 @@
 
     <!-- SECCIÓN DE INSTRUCCIONES -->
     <div class="card instructions">
-        <h3 style="margin-top:0; color: #0078d4;">📖 Guías de Configuración y Uso</h3>
+        <h3 style="margin-top:0; color: #0078d4;">📖 Instrucciones de Uso</h3>
         
-        <p><b>Método A: Automatización GPS con Modos y Rutinas (Samsung)</b></p>
+        <p><b>A. Automatización con Modos y Rutinas (Samsung Galaxy)</b></p>
         <ol>
-            <li>Pega la URL del formulario arriba y presiona <b>"Copiar Link Entrada"</b>.</li>
-            <li>En tu teléfono ve a <i>Ajustes → Modos y Rutinas → Rutinas</i>.</li>
-            <li><b>Si:</b> Selecciona <i>Lugar</i> (coordenadas del centro/hospital) + rango de <i>Horario</i> matutino.</li>
+            <li>Ingresa la URL del Google Form y presiona <b>"Copiar Link Entrada"</b> (Opción 1).</li>
+            <li>En tu celular entra a <i>Ajustes → Modos y Rutinas → Rutinas (+)</i>.</li>
+            <li><b>Si:</b> Selecciona <i>Lugar</i> (el hospital o centro) + rango de <i>Horario</i> matutino.</li>
             <li><b>Entonces:</b> Selecciona <i>Sitios web → Abrir enlace web</i> y pega el link copiado.</li>
-            <li><i>(Opcional con Routines+):</i> Agrega una acción de "Macro táctil" para pulsar "Enviar" tras 2 segundos.</li>
         </ol>
 
-        <p><b>Método B: Marcadores en Chrome (Android)</b></p>
+        <p><b>B. Marcador tradicional en Chrome Móvil</b></p>
         <ol>
-            <li>Presiona <b>"Copiar Script Entrada"</b> (o Salida).</li>
-            <li>Toca los <b>3 puntos</b> de Chrome y presiona el icono de la <b>estrella (⭐)</b> para guardar esta página.</li>
-            <li>Toca <b>"Editar"</b> en la barra inferior (o ve a <i>Marcadores → Editar</i>).</li>
-            <li>En <b>Nombre</b> escribe: <code>Auto Entrada</code>.</li>
-            <li>En <b>URL</b> borra todo el contenido, <b>pega el código copiado</b> y guarda.</li>
-            <li>Al abrir el Google Form, escribe <code>Auto Entrada</code> en la barra de direcciones y toca la sugerencia con la <b>estrella (⭐)</b>.</li>
+            <li>Presiona <b>"Copiar Script Entrada"</b> (Opción 2).</li>
+            <li>En Chrome toca <b>3 puntos → Estrella (⭐)</b> para guardar cualquier web.</li>
+            <li>Toca <b>"Editar"</b> en la barra inferior, escribe <code>Auto Entrada</code> y en <b>URL</b> pega el script.</li>
+            <li>En el Google Form, escribe <code>Auto Entrada</code> en la barra de direcciones y toca la opción con la <b>estrella (⭐)</b>.</li>
         </ol>
 
         <div class="tip-box">
-            <b>💡 ¿No hace nada al tocar la estrella en Chrome?</b><br>
-            Vuelve a tocar la barra de direcciones, escribe <code>Auto Entrada</code> y <b>agrega un espacio al final</b> antes de seleccionar la opción de la estrella.
+            <b>💡 Tip para Chrome:</b> Si al tocar la estrella en el navegador no se ejecuta, escribe <code>Auto Entrada</code> y pon un espacio al final antes de tocar la sugerencia.
         </div>
     </div>
 
@@ -231,38 +233,46 @@
             };
         }
 
-        function generarUrl(tipoRegistro) {
+        // Genera el enlace al puente enviar.html pasando todos los datos
+        function generarUrlAutoEnvio(tipoRegistro) {
             const d = obtenerValores();
-            let base = d.urlBase.split('?')[0];
+            
+            // Extraer el ID único del formulario desde la URL
+            const match = d.urlBase.match(/\/d\/e\/([a-zA-Z0-9_-]+)\//);
+            const formId = match ? match[1] : '';
+
+            // Obtener la URL del archivo enviar.html en el mismo directorio de GitHub Pages
+            const baseUrl = window.location.href.split('?')[0].replace(/index\.html$/, '').replace(/\/$/, '') + '/enviar.html';
 
             const params = new URLSearchParams();
-            params.append('usp', 'pp_url');
-            params.append(ENTRIES.nombre, d.nombre);
-            params.append(ENTRIES.rut, d.rut);
-            params.append(ENTRIES.tutor, d.tutor);
-            params.append(ENTRIES.unidad, d.unidad);
-            params.append(ENTRIES.tipoRegistro, tipoRegistro);
-            params.append(ENTRIES.centro, d.centro);
-            params.append(ENTRIES.carrera, d.carrera);
-            params.append(ENTRIES.practica, d.practica);
+            params.append('formId', formId);
+            params.append('nombre', d.nombre);
+            params.append('rut', d.rut);
+            params.append('tutor', d.tutor);
+            params.append('unidad', d.unidad);
+            params.append('tipo', tipoRegistro);
+            params.append('centro', d.centro);
+            params.append('carrera', d.carrera);
+            params.append('practica', d.practica);
 
-            return `${base}?${params.toString()}`;
+            return `${baseUrl}?${params.toString()}`;
         }
 
+        // Genera el código JavaScript del Bookmarklet
         function generarBookmarklet(tipoRegistro) {
             const d = obtenerValores();
             return `javascript:(function(){function t(e,t){let n=document.querySelector(e);n&&(n.focus(),n.value=t,n.setAttribute("data-initial-value",t),n.dispatchEvent(new Event("input",{bubbles:!0})),n.dispatchEvent(new Event("change",{bubbles:!0})),n.blur())}function e(e){let t=document.querySelector('div[role="radio"][data-value="'+e+'"]');t&&t.click()}t('input[name="${ENTRIES.nombre}"]',"${d.nombre}"),t('input[name="${ENTRIES.rut}"]',"${d.rut}"),t('input[name="${ENTRIES.tutor}"]',"${d.tutor}"),t('input[name="${ENTRIES.unidad}"]',"${d.unidad}"),e("${tipoRegistro}"),e("${d.centro}"),e("${d.carrera}"),e("${d.practica}"),setTimeout(()=>{let e=Array.from(document.querySelectorAll('div[role="button"]')).find(e=>e.innerText.trim().toLowerCase().includes("enviar")||e.innerText.trim().toLowerCase().includes("submit"));e&&e.click()},400)})();`;
         }
 
-        function copiarUrl(tipo) {
+        function copiarAutoEnvio(tipo) {
             const d = obtenerValores();
-            if (!d.urlBase || !d.urlBase.startsWith('http')) {
-                mostrarToast('⚠️ Pega primero el enlace de tu Google Form arriba');
+            if (!d.urlBase || !d.urlBase.includes('/d/e/')) {
+                mostrarToast('⚠️ Pega primero la URL de tu Google Form arriba');
                 document.getElementById('formUrl').focus();
                 return;
             }
-            const enlace = generarUrl(tipo);
-            copiarTexto(enlace, `✓ Enlace de ${tipo} copiado al portapapeles`);
+            const link = generarUrlAutoEnvio(tipo);
+            copiarTexto(link, `✓ Link de Auto-Envío (${tipo}) copiado`);
         }
 
         function copiarBookmarklet(tipo) {
