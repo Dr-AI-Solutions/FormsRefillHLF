@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalador de Marcadores y Enlaces - Asistencia</title>
+    <style>
+        :root {
+            --primary-color: #0078d4;
+            --success-color: #107c41;
+            --danger-color: #d13438;
+            --bg-color: #faf9f8;
+            --subtext-color: #605e5c;
+            --border-color: #8a8886;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px 15px;
+            background-color: var(--bg-color);
+            color: #323130;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h2, h3 { margin-top: 0; color: var(--primary-color); }
+        
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 4px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .section-header {
+            margin-top: 22px;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #323130;
+            border-bottom: 1px solid #edebe9;
+            padding-bottom: 4px;
+        }
+
+        .section-desc {
+            font-size: 12px;
+            color: var(--subtext-color);
+            margin: 0 0 10px 0;
+            line-height: 1.4;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:active { opacity: 0.85; }
+
+        .btn-entrada { background-color: var(--success-color); color: white; }
+        .btn-salida { background-color: var(--danger-color); color: white; }
+
+        .toast {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 20px;
+            background: #323130;
+            color: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            font-size: 14px;
+            z-index: 1000;
+            text-align: center;
+            max-width: 85%;
+        }
+
+        .instructions {
+            background: #eff6fc;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .instructions ol { margin: 5px 0 12px 0; padding-left: 20px; }
+        .instructions p { margin: 8px 0 4px 0; }
+
+        .tip-box {
+            background: #fff4ce;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 3px solid #ffb900;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Generador de Asistencia</h2>
+        <p style="font-size: 14px; color: var(--subtext-color);">Completa tus datos para generar los enlaces automáticos o los marcadores de Entrada y Salida.</p>
+        
+        <label>URL del Google Form:</label>
+        <input type="text" id="formUrl" placeholder="https://docs.google.com/forms/d/e/.../viewform">
+
+        <label>Nombre Completo:</label>
+        <input type="text" id="nombre" value="Pablo Sepúlveda Guerrero">
+
+        <label>RUT (sin puntos, con guión):</label>
+        <input type="text" id="rut" value="17154714-8">
+
+        <label>Tutor Clínico:</label>
+        <input type="text" id="tutor" value="Dr. Emanuel Llaguno">
+
+        <label>Unidad de Práctica:</label>
+        <input type="text" id="unidad" value="Ginecología">
+
+        <label>Centro de Formación:</label>
+        <input type="text" id="centro" value="Pontificia Universidad Católica (PUC)">
+
+        <label>Carrera:</label>
+        <input type="text" id="carrera" value="Medicina">
+
+        <label>Tipo de Práctica:</label>
+        <input type="text" id="practica" value="Internado o Laboral">
+
+        <!-- OPCIÓN 1: ENLACES URL -->
+        <div class="section-header">📍 Opción 1: Enlaces Directos (Good Lock / Routines+)</div>
+        <p class="section-desc">Abre el formulario con todos los campos pre-llenados automáticamente por URL. Ideal para geolocalización.</p>
+        <div class="btn-group">
+            <button class="btn-entrada" onclick="copiarUrl('ENTRADA')">Copiar Link Entrada</button>
+            <button class="btn-salida" onclick="copiarUrl('SALIDA')">Copiar Link Salida</button>
+        </div>
+
+        <!-- OPCIÓN 2: BOOKMARKLETS -->
+        <div class="section-header">⭐ Opción 2: Bookmarklets (Rellena y Envía)</div>
+        <p class="section-desc">Se guarda como marcador en Chrome. Al estar dentro del formulario, lo ejecutas desde la barra superior y se envía solo.</p>
+        <div class="btn-group">
+            <button class="btn-entrada" onclick="copiarBookmarklet('ENTRADA')">Copiar Script Entrada</button>
+            <button class="btn-salida" onclick="copiarBookmarklet('SALIDA')">Copiar Script Salida</button>
+        </div>
+
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <!-- SECCIÓN DE INSTRUCCIONES -->
+    <div class="card instructions">
+        <h3 style="margin-top:0; color: #0078d4;">📖 Guías de Configuración y Uso</h3>
+        
+        <p><b>Método A: Automatización GPS con Modos y Rutinas (Samsung)</b></p>
+        <ol>
+            <li>Pega la URL del formulario arriba y presiona <b>"Copiar Link Entrada"</b>.</li>
+            <li>En tu teléfono ve a <i>Ajustes → Modos y Rutinas → Rutinas</i>.</li>
+            <li><b>Si:</b> Selecciona <i>Lugar</i> (coordenadas del centro/hospital) + rango de <i>Horario</i> matutino.</li>
+            <li><b>Entonces:</b> Selecciona <i>Sitios web → Abrir enlace web</i> y pega el link copiado.</li>
+            <li><i>(Opcional con Routines+):</i> Agrega una acción de "Macro táctil" para pulsar "Enviar" tras 2 segundos.</li>
+        </ol>
+
+        <p><b>Método B: Marcadores en Chrome (Android)</b></p>
+        <ol>
+            <li>Presiona <b>"Copiar Script Entrada"</b> (o Salida).</li>
+            <li>Toca los <b>3 puntos</b> de Chrome y presiona el icono de la <b>estrella (⭐)</b> para guardar esta página.</li>
+            <li>Toca <b>"Editar"</b> en la barra inferior (o ve a <i>Marcadores → Editar</i>).</li>
+            <li>En <b>Nombre</b> escribe: <code>Auto Entrada</code>.</li>
+            <li>En <b>URL</b> borra todo el contenido, <b>pega el código copiado</b> y guarda.</li>
+            <li>Al abrir el Google Form, escribe <code>Auto Entrada</code> en la barra de direcciones y toca la sugerencia con la <b>estrella (⭐)</b>.</li>
+        </ol>
+
+        <div class="tip-box">
+            <b>💡 ¿No hace nada al tocar la estrella en Chrome?</b><br>
+            Vuelve a tocar la barra de direcciones, escribe <code>Auto Entrada</code> y <b>agrega un espacio al final</b> antes de seleccionar la opción de la estrella.
+        </div>
+    </div>
+
+    <script>
+        const ENTRIES = {
+            nombre: 'entry.1125415197',
+            rut: 'entry.2038342567',
+            tutor: 'entry.1613874889',
+            unidad: 'entry.1070242386',
+            tipoRegistro: 'entry.252623464',
+            centro: 'entry.408381012',
+            carrera: 'entry.1147142850',
+            practica: 'entry.1058267936'
+        };
+
+        function obtenerValores() {
+            return {
+                urlBase: document.getElementById('formUrl').value.trim(),
+                nombre: document.getElementById('nombre').value.trim(),
+                rut: document.getElementById('rut').value.trim(),
+                tutor: document.getElementById('tutor').value.trim(),
+                unidad: document.getElementById('unidad').value.trim(),
+                centro: document.getElementById('centro').value.trim(),
+                carrera: document.getElementById('carrera').value.trim(),
+                practica: document.getElementById('practica').value.trim()
+            };
+        }
+
+        function generarUrl(tipoRegistro) {
+            const d = obtenerValores();
+            let base = d.urlBase.split('?')[0];
+
+            const params = new URLSearchParams();
+            params.append('usp', 'pp_url');
+            params.append(ENTRIES.nombre, d.nombre);
+            params.append(ENTRIES.rut, d.rut);
+            params.append(ENTRIES.tutor, d.tutor);
+            params.append(ENTRIES.unidad, d.unidad);
+            params.append(ENTRIES.tipoRegistro, tipoRegistro);
+            params.append(ENTRIES.centro, d.centro);
+            params.append(ENTRIES.carrera, d.carrera);
+            params.append(ENTRIES.practica, d.practica);
+
+            return `${base}?${params.toString()}`;
+        }
+
+        function generarBookmarklet(tipoRegistro) {
+            const d = obtenerValores();
+            return `javascript:(function(){function t(e,t){let n=document.querySelector(e);n&&(n.focus(),n.value=t,n.setAttribute("data-initial-value",t),n.dispatchEvent(new Event("input",{bubbles:!0})),n.dispatchEvent(new Event("change",{bubbles:!0})),n.blur())}function e(e){let t=document.querySelector('div[role="radio"][data-value="'+e+'"]');t&&t.click()}t('input[name="${ENTRIES.nombre}"]',"${d.nombre}"),t('input[name="${ENTRIES.rut}"]',"${d.rut}"),t('input[name="${ENTRIES.tutor}"]',"${d.tutor}"),t('input[name="${ENTRIES.unidad}"]',"${d.unidad}"),e("${tipoRegistro}"),e("${d.centro}"),e("${d.carrera}"),e("${d.practica}"),setTimeout(()=>{let e=Array.from(document.querySelectorAll('div[role="button"]')).find(e=>e.innerText.trim().toLowerCase().includes("enviar")||e.innerText.trim().toLowerCase().includes("submit"));e&&e.click()},400)})();`;
+        }
+
+        function copiarUrl(tipo) {
+            const d = obtenerValores();
+            if (!d.urlBase || !d.urlBase.startsWith('http')) {
+                mostrarToast('⚠️ Pega primero el enlace de tu Google Form arriba');
+                document.getElementById('formUrl').focus();
+                return;
+            }
+            const enlace = generarUrl(tipo);
+            copiarTexto(enlace, `✓ Enlace de ${tipo} copiado al portapapeles`);
+        }
+
+        function copiarBookmarklet(tipo) {
+            const codigo = generarBookmarklet(tipo);
+            copiarTexto(codigo, `✓ Script de ${tipo} copiado al portapapeles`);
+        }
+
+        function copiarTexto(texto, mensaje) {
+            navigator.clipboard.writeText(texto).then(() => {
+                mostrarToast(mensaje);
+            }).catch(() => {
+                mostrarToast('Error al copiar automáticamente. Revisa permisos.');
+            });
+        }
+
+        function mostrarToast(mensaje) {
+            let toast = document.getElementById('toast');
+            toast.innerText = mensaje;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+    </script>
+</body>
+</html>
